@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springboot.mapper.CartMapper">
+
+    <update id="updateById">
+        update cart set categoryname = #{categoryname}, no = #{no} where id = #{id}
+    </update>
+
+
+    <delete id="deleteById">
+        delete from category where id = #{id} AND goods_id = #{goodId}
+    </delete>
+
+    <insert id="save">
+        insert into cart(goods_id, user_id, count, create_time) values (#{goodsId}, #{userId}, #{count}, #{createTime})
+    </insert>
+
+    <select id="getById" resultType="com.example.springboot.entity.Cart">
+        select * from cart where user_id = #{userId} And goods_id = #{goodsId}
+    </select>
+
+</mapper>

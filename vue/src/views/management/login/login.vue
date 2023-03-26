@@ -26,8 +26,7 @@
           <el-input placeholder="请输入密码" show-password prefix-icon="el-icon-lock" size="medium" v-model="admin.password"></el-input>
         </el-form-item>
         <el-form-item >
-          <el-button style="width: 100%; margin-bottom: 20px" size="medium" type="primary" @click="login">以管理员身份登录</el-button>
-          <el-button style="width: 100%; transform: translateX(-10px)" size="medium" type="warning" @click="loginUser">以用户身份登录</el-button>
+          <el-button style="width: 100%; transform: translateX(-10px)" size="medium" type="warning" @click="loginUser">登录</el-button>
         </el-form-item>
       </el-form>
     </div>

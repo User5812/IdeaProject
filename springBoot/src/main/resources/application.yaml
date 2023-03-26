@@ -4,7 +4,6 @@ spring:
     url: jdbc:mysql://localhost:3306/ssmmall?serverTimezone=GMT%2b8 #北京时间
     username: root
     password: qq2635030465
-
 server:
   port: 9090
 

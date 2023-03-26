@@ -21,9 +21,9 @@ public class WebConfig implements  WebMvcConfigurer {
     }
 
     // 加自定义拦截器JwtInterceptor，设置拦截规则
-    /*@Override
+    @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //放开登录接口，因为登录的时候还没有token
-        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/user/login");
-    }*/
+        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/user/login", "/api/files/**");
+    }
 }

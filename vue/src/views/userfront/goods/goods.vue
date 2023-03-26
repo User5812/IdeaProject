@@ -136,6 +136,7 @@
 
 <script>
 import request from "@/utils/request";
+import Cookies from "js-cookie";
 
 const url = "/api/video/"
 
@@ -143,6 +144,7 @@ export default {
   name: "Goods",
   data() {
     return {
+      admin: Cookies.get('admin')? JSON.parse(Cookies.get('admin')): {},
       messages: [],
       dialogFormVisible: false,
       entity: {},
@@ -217,13 +219,6 @@ export default {
       })
     },
     buyNow() {
-      if ((this.goods.store - this.num) < 0) {
-        this.$message({
-          type: 'warning',
-          message: '商品库存不足！'
-        })
-        return
-      }
       let cart = []
       cart.push({count: this.num, goods: this.goods, goodsId: this.goods.id})
       this.$store.commit("setCarts", cart)
@@ -283,22 +278,12 @@ export default {
       })
     },
     addCart() {
-      if (!this.user.id) {
-        this.$message({
-          type: 'warning',
-          message: '请登录！'
-        })
+      if(this.num > this.goods.store){
+        this.$notify.error("库存不足！")
         return
       }
-      if ((this.goods.store - this.num) < 0) {
-        this.$message({
-          type: 'warning',
-          message: '商品库存不足！'
-        })
-        return
-      }
-      request.post("/api/cart", {goodsId: this.goods.id, count: this.num, userId: this.user.id}).then(res => {
-        if (res.code === '0') {
+      request.post("/cart/insertCart", {goodsId: this.goods.id, count: this.num, userId: this.admin.id}).then(res => {
+        if (res.code === '200') {
           this.$message({
             type: 'success',
             message: '加入成功！'
