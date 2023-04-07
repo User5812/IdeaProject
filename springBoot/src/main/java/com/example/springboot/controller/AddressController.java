@@ -2,6 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.common.Result;
 import com.example.springboot.controller.options.UserOptions;
+import com.example.springboot.controller.query.AddressSelectQuery;
 import com.example.springboot.controller.request.AddressPageRequest;
 import com.example.springboot.entity.Address;
 import com.example.springboot.entity.User;
@@ -53,8 +54,8 @@ public class AddressController {
     }
 
     @GetMapping("/list")
-    public Result list (){
-        List<Address> addresses = addressService.getAllAddress();
+    public Result list (AddressSelectQuery query){
+        List<Address> addresses = addressService.getAllAddress(query);
         return Result.success(addresses);
     }
 

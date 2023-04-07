@@ -26,10 +26,6 @@
                 <img :src="collectActiveIcon" alt="收藏" style="width: 15px; ">
                 <span style="position: relative; bottom: 3px; font-size: 12px; left: 5px; color: #666">收藏</span>
               </div>
-              <div style="display: inline-block; cursor: pointer; margin-left: 20px" @click="praise">
-                <img :src="praiseActiveIcon" alt="点赞" style="width: 15px; ">
-                <span style="position: relative; bottom: 2px; color: #666; margin-left: 5px">{{ goods.praise }}</span>
-              </div>
             </div>
             <div style="padding: 10px 0; font-size: 20px; font-weight: bold">{{ goods.name }}</div>
             <div style="padding: 10px 0; color: #666; font-size: 14px">{{ goods.description }}</div>
@@ -65,8 +61,6 @@
                 <img :src="cartIcon" style="width: 20px; position: absolute; left: 8px; top: 5px">
                 <span style="margin-left: 20px">加入购物车</span>
               </el-button>
-              <el-button style="margin-left: 10px; background-color: orangered; color: white" @click="buyNow">立即购买
-              </el-button>
             </div>
 
           </el-card>
@@ -89,22 +83,19 @@
               <div
                   style="padding-bottom: 10px; margin-bottom: 20px; border-bottom: 2px solid orangered; font-size: 20px">
                 商品评论
+                  <el-button style="float: right" @click="setVisible">发表评论</el-button>
               </div>
 
               <div style="display: flex; padding: 20px" v-for="item in messages">
                 <div style="text-align: center; flex: 1">
-                  <el-image :src="item.avatar" style="width: 60px; height: 60px; border-radius: 50%"></el-image>
+                  <el-image :src="diana" style="width: 60px; height: 60px; border-radius: 50%"></el-image>
                 </div>
                 <div style="padding: 0 10px; flex: 5">
                   <div><b style="font-size: 14px">{{ item.username }}</b></div>
                   <div style="padding: 10px 0; color: #888">
                     {{ item.content }}
-                    <el-button type="text" size="mini" @click="del(item.id)" v-if="item.username === user.username">删除
+                    <el-button type="text" size="mini" @click="del(item)" style="float: right">删除
                     </el-button>
-                  </div>
-                  <div style="background-color: #eee; padding: 10px" v-if="item.parentMessage">{{
-                      item.username
-                    }}：{{ item.parentMessage.content }}
                   </div>
                   <div style="color: #888; font-size: 12px">
                     <span>{{ item.time }}</span>
@@ -138,7 +129,6 @@
 import request from "@/utils/request";
 import Cookies from "js-cookie";
 
-const url = "/api/video/"
 
 export default {
   name: "Goods",
@@ -151,8 +141,8 @@ export default {
       address: '',
       mainImg: '',
       cartIcon: require('../../../assets/购物车-23.png'),
-      praiseActiveIcon: require("../../../assets/点赞-激活.png"),
       collectActiveIcon: require("../../../assets/收藏-激活.png"),
+      diana: require("../../../assets/diana.jpg"),
       num: 1,
       id: 1,
       user: {},
@@ -166,13 +156,13 @@ export default {
   },
   methods: {
     collect() {
-      request.post("/api/collect", {
+      request.post("/collect/insertCollect", {
         goodsName: this.goods.name,
-        goodsImg: this.goods.imgs[0],
+        goodsImg: this.goods.imgs,
         goodsId: this.goods.id,
-        userId: this.user.id
+        userId: this.admin.id
       }).then(res => {
-        if (res.code === '0') {
+        if (res.code === '200') {
           this.$message({
             message: "收藏成功",
             type: "success"
@@ -186,46 +176,13 @@ export default {
         this.load();
       })
     },
-    praise() {
-      if (this.praiseFlag) {
-        this.$message({
-          message: "您已点过赞",
-          type: "warning"
-        });
-        return
-      }
-      this.praiseFlag = true
-      this.entity = JSON.parse(JSON.stringify(this.goods))
-      this.entity.praise += 1
-      this.entity.imgs = null
-      request.put("/api/goods", this.entity).then(res => {
-        if (res.code === '0') {
-          this.$message({
-            message: "点赞成功",
-            type: "success"
-          });
-        } else {
-          this.$message({
-            message: res.msg,
-            type: "error"
-          });
-        }
-        this.load();
-      })
-    },
     loadMessage() {
-      request.get("/api/message/foreign/" + this.goods.id).then(res => {
+      request.get("/message/listMessage/" + this.goods.id).then(res => {
         this.messages = res.data;
       })
     },
-    buyNow() {
-      let cart = []
-      cart.push({count: this.num, goods: this.goods, goodsId: this.goods.id})
-      this.$store.commit("setCarts", cart)
-      this.$router.replace("/front/preOrder")
-    },
     save() {  // 新增评论
-      if (!this.user.username) {
+      if (!this.admin.username) {
         this.$message({
           message: "请登录",
           type: "warning"
@@ -239,8 +196,8 @@ export default {
         });
         return;
       }
-      request.post("/api/message", this.entity).then(res => {
-        if (res.code === '0') {
+      request.post("/message/insertMessage", {goodsId: this.goods.id, userId: this.admin.id, username: this.admin.username, content: this.entity.reply}).then(res => {
+        if (res.code === '200') {
           this.$message({
             message: "评论成功",
             type: "success"
@@ -260,22 +217,30 @@ export default {
       this.dialogFormVisible = false;
       this.entity = {};
     },
-    reReply(id) {
-      this.dialogFormVisible = true;
-      this.entity.parentId = id;
-    },
     reply() {
       this.entity.content = this.entity.reply;
       this.save();
     },
-    del(id) {
-      request.delete("/api/message/" + id).then(res => {
-        this.$message({
-          message: "删除成功",
-          type: "success"
-        });
-        this.loadMessage()
+    del(item) {
+      console.log("您点击了删除按钮")
+      if(item.username !== this.admin.username) {
+        this.$notify.error("您无法删除他人的评论");
+        return;
+      }
+      request.delete("/message/deleteMessage/" + item.id).then( res => {
+        if (res.code === '200'){
+          this.$message({
+            type: 'success',
+            message: '删除成功！'
+          })
+        }else {
+          this.$message({
+            type: 'error',
+            message: res.msg
+          })
+        }
       })
+      this.loadMessage()
     },
     addCart() {
       if(this.num > this.goods.store){
@@ -299,6 +264,9 @@ export default {
     show(img) {
       this.mainImg = img
       console.log(img)
+    },
+    setVisible() {
+      this.dialogFormVisible = true;
     },
     load() {
       request.get("/goods/" + this.id).then(res => {

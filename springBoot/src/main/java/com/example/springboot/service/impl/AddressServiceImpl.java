@@ -1,6 +1,7 @@
 package com.example.springboot.service.impl;
 
 import com.example.springboot.controller.options.UserOptions;
+import com.example.springboot.controller.query.AddressSelectQuery;
 import com.example.springboot.controller.request.BaseRequest;
 import com.example.springboot.entity.Address;
 import com.example.springboot.entity.User;
@@ -22,8 +23,8 @@ public class AddressServiceImpl implements AddressService {
     AddressMapper addressmapper;
 
     @Override
-    public List<Address> getAllAddress(){
-        return addressmapper.listAddress();
+    public List<Address> getAllAddress(AddressSelectQuery query){
+        return addressmapper.listAddress(query);
     }
 
     @Override

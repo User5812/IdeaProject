@@ -10,12 +10,12 @@ import java.util.List;
 @Mapper
 public interface OrderMapper {
 
-    List<Order> listOrders();
+    List<Order> listOrders(Integer userId);
 
 
     List<Order> listByCondition(BaseRequest baseRequest);
 
-    void save(Order obj);
+    Boolean save(Order obj);
 
     Order getById(Integer id);
 

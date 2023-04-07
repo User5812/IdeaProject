@@ -18,6 +18,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 
@@ -45,9 +46,10 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("用户名错误");
         }
         //判断密码是否合法
+        user = usermapper.getByUsername(request.getUsername());
         String securePass = securePass(request.getPassword());
         if(!securePass.equals(user.getPassword())){
-            throw new ServiceException("用户名或者密码错误");
+            throw new ServiceException("密码错误");
         }
         if(user == null){
             throw new ServiceException("用户名或密码错误");
@@ -74,11 +76,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(User user) {
-        Date date = new Date();
-        //当作卡号来处理
-        user.setUsername(DateUtil.format(date,"yyyyMMdd") + Math.abs(IdUtil.fastSimpleUUID().hashCode()));
-        usermapper.save(user);
+    public Boolean save(User user) {
+
+        user.setIdentify("0");
+        user.setPassword(securePass(user.getPassword()));//设置加密
+        try {
+            return usermapper.save(user);
+        }catch (DuplicateKeyException e){
+            log.error("数据插入失败，username：{}",user.getUsername());
+            throw new ServiceException("用户名重复");
+        }
     }
 
     @Override

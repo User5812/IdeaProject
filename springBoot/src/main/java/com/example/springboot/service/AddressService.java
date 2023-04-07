@@ -1,6 +1,7 @@
 package com.example.springboot.service;
 
 import com.example.springboot.controller.options.UserOptions;
+import com.example.springboot.controller.query.AddressSelectQuery;
 import com.example.springboot.controller.request.BaseRequest;
 import com.example.springboot.entity.Address;
 import com.example.springboot.entity.User;
@@ -11,7 +12,7 @@ import java.util.List;
 
 public interface AddressService {
 
-    List<Address> getAllAddress();
+    List<Address> getAllAddress(AddressSelectQuery query);
 
     PageInfo<Address> page(BaseRequest request);
 

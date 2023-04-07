@@ -14,7 +14,7 @@ public interface UserMapper {
 
     List<User> listByCondition(BaseRequest baseRequest);
 
-    void save(User user);
+    Boolean save(User user);
 
     User getById(Integer id);
 

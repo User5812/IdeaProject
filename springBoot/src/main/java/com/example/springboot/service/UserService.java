@@ -16,7 +16,7 @@ public interface UserService {
 
     PageInfo<User> page(BaseRequest baseRequest);
 
-    void save(User user);
+    Boolean save(User user);
 
     User getById(Integer id);
 

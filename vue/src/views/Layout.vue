@@ -35,14 +35,15 @@ left: 10px">
             </template>
             <el-menu-item index="/userList">会员列表</el-menu-item>
           </el-submenu>
-          <el-submenu index="admin">
+<!--          已停用-->
+<!--          <el-submenu index="admin">
             <template slot="title">
               <i class="el-icon-user"></i>
               <span>管理员管理</span>
             </template>
             <el-menu-item index="/adminList">管理员列表</el-menu-item>
             <el-menu-item index="/addAdmin">管理员添加</el-menu-item>
-          </el-submenu>
+          </el-submenu>-->
 <!--          商品管理-->
           <el-submenu index="goods">
             <template slot="title">

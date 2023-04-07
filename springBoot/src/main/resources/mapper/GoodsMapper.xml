@@ -18,7 +18,7 @@
     </delete>
 
     <select id="listGoodss" resultType="com.example.springboot.entity.Goods">
-        select * from goods
+        select * from goods where id = #{id}
     </select>
 
     <select id="listByCondition" resultType="com.example.springboot.entity.Goods">
@@ -33,13 +33,16 @@
                 <if test="recommend != null and recommend != ''">
                     recommend = #{recommend}
                 </if>
+                <if test="status != null and status != ''">
+                    And status = #{status}
+                </if>
             </where>
         order by id asc
     </select>
 
     <insert id="save">
-        insert into goods(name, description, no, price, discount, store, category_id, imgs, recommend, status)
-        values(#{name}, #{description}, #{no}, #{price}, #{discount}, #{store}, #{categoryId}, #{imgs}, #{recommend}, #{status})
+        insert into goods(name, seller_phone, user_id, description, no, price, discount, store, category_id, imgs, recommend, status)
+        values(#{name}, #{sellerPhone}, #{userId}, #{description}, #{no}, #{price}, #{discount}, #{store}, #{categoryId}, #{imgs}, #{recommend}, #{status})
     </insert>
 
     <select id="getById" resultType="com.example.springboot.entity.Goods">

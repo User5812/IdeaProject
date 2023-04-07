@@ -31,7 +31,8 @@
     </select>
 
     <insert id="save">
-        insert into user(name, username, age, sex, address, phone) values(#{name},#{username},#{age},#{sex},#{address},#{phone})
+        insert into user(username, password, nick_name, email, phone, address, age, identify)
+        values(#{username}, #{password}, #{nickName}, #{email}, #{phone}, #{address}, #{age}, #{identify})
     </insert>
 
     <select id="getById" resultType="com.example.springboot.entity.User">

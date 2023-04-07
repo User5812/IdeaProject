@@ -1,8 +1,11 @@
 package com.example.springboot.controller;
 
 import com.example.springboot.common.Result;
+import com.example.springboot.controller.dto.OrderVo;
 import com.example.springboot.controller.options.UserOptions;
+import com.example.springboot.controller.query.OrderInsetQuery;
 import com.example.springboot.controller.request.OrderPageRequest;
+import com.example.springboot.entity.Address;
 import com.example.springboot.entity.Order;
 import com.example.springboot.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,16 +42,16 @@ public class OrderController {
     }
 
     @PostMapping("/save")
-    public Result save(@RequestBody Order obj){
+    public Result save(@RequestBody OrderInsetQuery query){
         //System.out.println(obj);
-        orderService.save(obj);
-        return Result.success();
+
+        return Result.success(orderService.save(query));
     }
 
     @GetMapping("/list")
-    public Result list (){
-        List<Order> obj = orderService.getAllOrders();
-        return Result.success(obj);
+    public Result list (OrderPageRequest request){
+        Object OrderPages = orderService.getAllOrders(request);
+        return Result.success(OrderPages);
     }
 
     @GetMapping("/page")

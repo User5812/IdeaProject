@@ -5,12 +5,12 @@
 <mapper namespace="com.example.springboot.mapper.CartMapper">
 
     <update id="updateById">
-        update cart set categoryname = #{categoryname}, no = #{no} where id = #{id}
+        update cart set count = #{count} where id = #{id}
     </update>
 
 
     <delete id="deleteById">
-        delete from category where id = #{id} AND goods_id = #{goodId}
+        delete from cart where id = #{id}
     </delete>
 
     <insert id="save">
@@ -21,4 +21,15 @@
         select * from cart where user_id = #{userId} And goods_id = #{goodsId}
     </select>
 
+    <select id="selectUserCart" resultType="com.example.springboot.entity.CartListDo">
+        SELECT A.id, B.id as goodsId, imgs, name, price, discount, count, store, A.create_time FROM cart AS A INNER JOIN goods AS B ON A.goods_id = B.id WHERE A.user_id = #{id}
+    </select>
+
+    <delete id="deleteAll">
+        delete from cart
+    </delete>
+
+    <delete id="deleteByUserId">
+        delete from cart where user_id = #{userId}
+    </delete>
 </mapper>

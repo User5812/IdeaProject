@@ -27,13 +27,64 @@
         </el-form-item>
         <el-form-item >
           <el-button style="width: 100%; transform: translateX(-10px)" size="medium" type="warning" @click="loginUser">登录</el-button>
+          <el-button style="width: 20%; margin-left: 310px; margin-top: 10px" size="small" type="primary" @click="register">我要注册</el-button>
         </el-form-item>
       </el-form>
     </div>
+
+
+    <!-- 弹窗   -->
+    <el-dialog title="欢迎注册" :visible.sync="dialogFormVisible" width="30%"
+               :close-on-click-modal="false">
+      <el-form :model="entity" :rules="registerRule" ref="reg">
+        <el-form-item label="用户名" label-width="150px" prop="username">
+          <el-input v-model="entity.username" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" label-width="150px" prop="password">
+          <el-input type="password" v-model="entity.password" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="昵称" label-width="150px" prop="nickName">
+          <el-input v-model="entity.nickName" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" label-width="150px">
+          <el-input v-model="entity.email" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号码" label-width="150px" prop="phone">
+          <el-input v-model="entity.phone" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="地址" label-width="150px">
+          <el-input v-model="entity.address" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+        <el-form-item label="年龄" label-width="150px" prop="age">
+          <el-input v-model="entity.age" autocomplete="off" style="width: 80%"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="save('reg')">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
+let checkAge = (rule, value, callback) => {
+  if (!value) {
+    return callback(new Error('年龄不能为空'));
+  }
+  if (isNaN(Number(value))) {
+    callback(new Error('请输入数字值'));
+  } else {
+    if (value < rule.max_age) {
+      callback(new Error('必须年满18岁'));
+    } else {
+      callback();
+    }
+  }
+};
+
 import request from "@/utils/request";
 import Cookies from "js-cookie"
 export default {
@@ -42,6 +93,8 @@ export default {
     return {
       loginAdmin: {},
       admin: {},
+      dialogFormVisible: false,
+      entity: [],
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -49,13 +102,60 @@ export default {
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 3, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-        ]}
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ]},
+      registerRule: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
+        ],
+        nickName: [
+          { required: true, message: '请输入昵称', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+        ],
+        age: [
+          {max_age:18, validator: checkAge, trigger: 'blur' }
+        ],
+        phone: [
+          { required: true, message: '手机号必填', trigger: 'blur' },
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号码格式不正确', trigger: 'blur' }
+        ]
+      }
     }
 
 
   },
   methods: {
+    save(formName) {
+      this.$refs[formName].validate(valid => {
+        if(valid){
+          request.post("/user/save",this.entity).then( res => {
+            if(res.code === '200'){
+              this.$notify({
+                message: '注册成功！',
+                type: 'success'
+              })
+            }else {
+              this.$notify({
+                message: res.msg,
+                type: 'error'
+              })
+            }
+          })
+          this.entity = []
+          this.dialogFormVisible = false
+        }else {}
+      })
+
+    },
+    register() {
+      this.entity = {}
+      this.dialogFormVisible = true
+    },
     loginUser() {
       this.$refs['admin'].validate(valid => {
         if(valid){
@@ -68,7 +168,6 @@ export default {
           })
         }else {}
       })
-
     },
     onSuccess() {
       Cookies.set('admin', JSON.stringify(this.loginAdmin))

@@ -24,6 +24,6 @@ public class WebConfig implements  WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //放开登录接口，因为登录的时候还没有token
-        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/user/login", "/api/files/**");
+        registry.addInterceptor(jwtInterceptor).addPathPatterns("/api/**").excludePathPatterns("/api/user/login", "/api/files/**", "/api/user/save");
     }
 }

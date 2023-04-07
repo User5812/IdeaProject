@@ -7,6 +7,7 @@ import com.example.springboot.entity.Category;
 import com.example.springboot.entity.Goods;
 import com.example.springboot.mapper.GoodsMapper;
 import com.example.springboot.service.GoodsService;
+import com.example.springboot.utils.SnowFlakeUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public void save(Goods goods) {
+        goods.setNo(SnowFlakeUtil.getNextId());
         goodsmapper.save(goods);
     }
 

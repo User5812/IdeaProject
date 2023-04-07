@@ -7,4 +7,5 @@ public class GoodsPageRequest extends BaseRequest{
     private String name;
     private Integer categoryId;
     private Integer recommend;
+    private Integer status;
 }

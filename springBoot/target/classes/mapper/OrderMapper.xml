@@ -12,7 +12,7 @@
     </delete>
 
     <select id="listOrders" resultType="com.example.springboot.entity.Order">
-        select * from orders order by id desc
+        select * from orders where user_id = #{userId}
     </select>
 
     <select id="listByCondition" resultType="com.example.springboot.entity.Order">
@@ -24,13 +24,16 @@
             <if test="state != null and state != ''">
                 state = #{state}
             </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
+            </if>
         </where>
         order by id asc
     </select>
 
     <insert id="save">
-        insert into orders(order_no, totalprice, user_id, link_user, link_phone, link_address, state)
-        values(#{orderNo}, #{totalPrice}, #{userId}, #{linkUser}, #{linkPhone}, #{linkAddress}, #{state})
+        insert into orders(order_no, total_price, user_id, link_user, link_phone, link_address, state, create_time)
+        values(#{orderNo}, #{totalPrice}, #{userId}, #{linkUser}, #{linkPhone}, #{linkAddress}, #{state}, #{createTime})
     </insert>
 
     <select id="getById" resultType="com.example.springboot.entity.Order">

@@ -33,7 +33,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (StrUtil.isBlank(token)) {
             token = request.getParameter("token");
         }
-
         // 执行认证
         if (StrUtil.isBlank(token)) {
             throw new ServiceException(ERROR_CODE_401, "无token，请重新登录");
@@ -41,6 +40,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         // 获取 token 中的adminId
         String userId;
         User user;
+        userId = JWT.decode(token).getAudience().get(0);
         try {
             userId = JWT.decode(token).getAudience().get(0);
             // 根据token中的userid查询数据库
@@ -53,7 +53,6 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (user == null) {
             throw new ServiceException(ERROR_CODE_401, "用户不存在，请重新登录");
         }
-
         try {
             // 用户密码加签验证 token
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();

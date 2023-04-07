@@ -166,6 +166,7 @@ export default {
         this.categories = res.data
         this.activeIndex = res.data[0].id
         this.params.categoryId = res.data[0].id
+        this.params.status = 1
         this.loadTable()
       })
 

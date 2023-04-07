@@ -6,4 +6,5 @@ import lombok.Data;
 public class OrderPageRequest extends BaseRequest{
     private String orderNo;
     private String state;
+    private Integer userId;
 }

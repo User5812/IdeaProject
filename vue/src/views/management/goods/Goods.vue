@@ -29,6 +29,7 @@
             </el-switch>
           </template>
         </el-table-column>
+        <el-table-column prop="userId" label="关联上传用户" width="100px"></el-table-column>
         <el-table-column prop="description" label="描述" width="300px"></el-table-column>
         <el-table-column prop="no" label="编号" width="150px"></el-table-column>
         <el-table-column prop="price" label="价格" width="100px"></el-table-column>

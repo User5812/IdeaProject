@@ -15,7 +15,7 @@
     </delete>
 
     <select id="listAddress" resultType="com.example.springboot.entity.Address">
-        select * from address order by id desc
+        select * from address where user_id = #{userId} order by id desc
     </select>
 
     <select id="listByCondition" resultType="com.example.springboot.entity.Address">
@@ -26,6 +26,9 @@
             </if>
             <if test="linkPhone != null and linkPhone != ''">
                 link_phone like concat('%',#{linkPhone},'%')
+            </if>
+            <if test="userId != null and userId != ''">
+                user_id = #{userId}
             </if>
         </where>
         order by id asc

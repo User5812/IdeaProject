@@ -25,12 +25,12 @@ public class CartController {
         }
     }
 
-    @PostMapping("/deleteCart")
-    public Result deleteCart(@RequestBody CartQuery query) {
-        return Result.success(service.deleteCart(query));
+    @DeleteMapping("/deleteCart/{id}")
+    public Result deleteCart(@PathVariable("id") Integer id) {
+        return Result.success(service.deleteCart(id));
     }
 
-    @PostMapping("/updateCart")
+    @PutMapping("/updateCart")
     public Result updateCart(@RequestBody CartQuery query) {
         return Result.success(service.updateCart(query));
     }
@@ -38,5 +38,10 @@ public class CartController {
     @PostMapping("/selectCart")
     public Result selectCart(@RequestBody CartQuery query) {
         return Result.success(service.selectCart(query));
+    }
+
+    @GetMapping("/selectUserCart/{userId}")
+    public Result selectUserCart(@PathVariable("userId") Integer id) {
+        return service.selectUserCart(id);
     }
 }

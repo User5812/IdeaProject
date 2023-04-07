@@ -28,6 +28,41 @@ const routes = [
         path: 'goods',
         name: 'Goods',
         component: () => import('@/views/userfront/goods/goods.vue')
+      },
+      {
+        path: 'cart',
+        name: 'Cart',
+        component: ()=> import('@/views/userfront/cart/cart.vue')
+      },
+      {
+        path: 'search',
+        name: 'Search',
+        component: ()=> import('@/views/userfront/search/search.vue')
+      },
+      {
+        path: 'person',
+        name: 'Person',
+        component: ()=> import ('@/views/management/home/HomeView.vue')
+      },
+      {
+        path: 'collect',
+        name: 'Collect',
+        component: ()=> import('@/views/userfront/collect/collect.vue')
+      },
+      {
+        path: 'address',
+        name: 'Address',
+        component: ()=> import('@/views/userfront/address/address.vue')
+      },
+      {
+        path: 'order',
+        name: 'Order',
+        component: ()=> import('@/views/userfront/order/order.vue')
+      },
+      {
+        path: 'preOrder',
+        name: 'PreOrder',
+        component: ()=> import('@/views/userfront/preOrder/preOrder.vue')
       }
     ]
   },

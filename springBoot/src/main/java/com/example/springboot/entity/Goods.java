@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @Data
 public class Goods {
     private Integer id;
+    private Integer userId;
+    private String sellerPhone;
     private String name;
     private String description;
     private String no;
@@ -20,6 +22,7 @@ public class Goods {
     private Integer sales;
     private Integer categoryId;
     private String imgs;
+    private Integer count;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDate createTime;
     private boolean recommend;
